@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <thread>
+#include <random>
+#include <iostream>
+#include <vector>
+#include <thread>
+#include <random>
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+void add(const vector<int>& arr1, const vector<int>& arr2, int n1, vector<int>& g) {
+    for (int i = 0; i < n1; ++i) {
+        g.push_back(arr1[i] + arr2[i]);
+    }
+}
+
+void mult(const vector<int>& arr1, const vector<int>& arr2, int n2, vector<int>& k) {
+    for (int i = 0; i < n2; ++i) {
+        k.push_back(arr1[i] * arr2[i]);
+    }
+}
+
+void random1(const vector<int>& arr1, const vector<int>& arr2, int n3, vector<int>& l) {
+    srand(time(nullptr));
+    for (int& el : l) {
+        el = rand() % 100 + 1;
+    }
+}
+
+void Print(const string& threadName, const vector<int>& arr1, const vector<int>& arr2, int n1, vector<int>& g) {
+    cout << threadName << endl;
+    if (threadName == "thread1 ") {
+        add(arr1, arr2, n1, g);
+    }
+    else if (threadName == "thread2 ") {
+        mult(arr1, arr2, n1, g);
+    }
+    else if (threadName == "thread3 ") {
+        random1(arr1, arr2, n1, g);
+    }
+    for (int i = 0; i < n1; i++) {
+        cout << g[i] << " ";
+    }
+    cout << endl;
+}
+
+void random(vector<int>& arr) {
+    srand(time(nullptr));
+    for (int& el : arr) {
+        el = rand() % 100 + 1;
+    }
+}
+
+int main() {
+    const int n1 = 3;
+    const int n2 = 3;
+    const int n3 = 5;
+    int size = 8;
+    vector<int> arr1(size);
+    vector<int> arr2(size);
+    vector<int> g;
+    vector<int> k;
+    vector<int> l(n3);
+
+    random(arr1);
+    random(arr2);
+
+    thread thread1(Print, "thread1 ", ref(arr1), ref(arr2), n1, ref(g));
+    thread1.join();
+    thread thread2(Print, "thread2 ", ref(arr1), ref(arr2), n2, ref(k));
+    thread2.join();
+    thread thread3(Print, "thread3 ", ref(arr1), ref(arr2), n3, ref(l));
+    thread3.join();
+    cout << "All threads finished" << endl;
+    return 0;
+}
